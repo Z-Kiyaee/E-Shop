@@ -15,14 +15,32 @@ namespace E_Shop.Services
 
         public async Task<List<Product>> GetProductListAsync()
         {
-            return await _context.Product.ToListAsync();
+            return await _context.Product.Include(e => e.Category).ToListAsync();
         }
 
-        public async Task<Product> Create(Product product)
+        public async Task Create(Product product)
         {
             _context.Add(product);
             await _context.SaveChangesAsync();
-            return product;
+        }
+
+        public async Task<Product?> GetProductByIdAsync(int id)
+        {
+            return await _context.Product.Include(e => e.Category).SingleOrDefaultAsync(e => e.Id == id);
+        }
+        public async Task Edit(Product product)
+        {
+            var updatedProduct = await _context.Product.SingleOrDefaultAsync(e => e.Id == product.Id);
+            updatedProduct.Name = product.Name;
+            updatedProduct.Price = product.Price;
+            updatedProduct.CategoryId = product.CategoryId;
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task Delete(Product product)
+        {
+            _context.Product.Remove(product);
+            await _context.SaveChangesAsync();
         }
     }
 }

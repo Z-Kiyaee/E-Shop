@@ -24,17 +24,50 @@ namespace E_Shop.Controllers
 
         public async Task<IActionResult> Create()
         {
-            var allcategories = await categoryService.GetCategoryListAsync();
-            ViewData["CategoryId"] = new SelectList(allcategories, "Id", "Name");
+            var allCategories = await categoryService.GetCategoryListAsync();
+            ViewData["CategoryId"] = new SelectList(allCategories, "Id", "Name");
             return View();
         }
 
         [HttpPost]
         public async Task<IActionResult> Create(Product Product)
         {
-
             await Service.Create(Product);
-            return View(Product);
+            return RedirectToAction("Index");
+        }
+
+        public async Task<IActionResult> Details(int id)
+        {
+            var product = await Service.GetProductByIdAsync(id);
+            return View(product);
+        }
+
+        public async Task<IActionResult> Edit(int id)
+        {
+            var allCategories = await categoryService.GetCategoryListAsync();
+            ViewData["CategoryId"] = new SelectList(allCategories, "Id", "Name");
+            var product = await Service.GetProductByIdAsync(id);
+            return View(product);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Edit(Product product)
+        {
+            await Service.Edit(product);
+            return RedirectToAction("Index");
+        }
+
+        public async Task<IActionResult> Delete(int id)
+        {
+            var product = await Service.GetProductByIdAsync(id);
+            return View(product);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Delete(Product product)
+        {
+            await Service.Delete(product);
+            return RedirectToAction("Index");
         }
     }
 }
