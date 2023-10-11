@@ -28,7 +28,39 @@ namespace E_Shop.Controllers
         public async Task<IActionResult> Create(Category category)
         {
             await Service.Create(category);
+            return RedirectToAction("Index");
+        }
+
+        public async Task<IActionResult> Details(int id)
+        {
+            var category = await Service.GetCategoryByIdAsync(id);
             return View(category);
+        }
+
+        public async Task<IActionResult> Edit(int id)
+        {
+            var category = await Service.GetCategoryByIdAsync(id);
+            return View(category);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Edit(Category category)
+        {
+            await Service.Edit(category);
+            return RedirectToAction("Index");
+        }
+
+        public async Task<IActionResult> Delete(int id)
+        {
+            var category = await Service.GetCategoryByIdAsync(id);
+            return View(category);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Delete(Category category)
+        {
+            await Service.Delete(category);
+            return RedirectToAction("Index");
         }
     }
 }
